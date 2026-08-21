@@ -58,5 +58,13 @@ class TheParentsFunctionCamTest(MovingCameraScene):
             cy = child_y(ct)
             py = parent_y(ct)
             y_center = (cy + py) / 2
+            frame_w = self.camera.frame_width
+            # Kropki mają być w 70% szerokości kadru od lewej
+            screen_frac = 0.70
+            cam_x = ct + frame_w/2 - screen_frac * frame_w
+            mob.move_to([cam_x, y_center, 0])
 
-            # Chcemy, żeby kropki były w sta
+        self.camera.frame.add_updater(update_camera)
+
+        self.play(t.animate.set_value(10), run_time=10, rate_func=linear)
+        self.wait(1)
