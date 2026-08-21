@@ -41,4 +41,60 @@ class TheParentsFunctionMovingV5(MovingCameraScene):
         def parent_y(x):
             return -0.12 * x + 0.3 * np.sin(0.7 * x + 0.5)
 
-        # Dwie kropki na czo
+        def make_child_line():
+            xs = np.linspace(t.get_value() - 5, t.get_value(), 200)
+            ys = child_y(xs)
+            pts = np.column_stack([xs, ys, np.zeros_like(xs)])
+            line = VMobject(color=child_color, stroke_width=6)
+            line.set_points_smoothly(pts)
+            glow = line.copy().set_stroke(child_color, width=22, opacity=0.12)
+            return VGroup(glow, line)
+
+        def make_parent_line():
+            xs = np.linspace(t.get_value() - 5, t.get_value(), 200)
+            ys = parent_y(xs)
+            pts = np.column_stack([xs, ys, np.zeros_like(xs)])
+            line = VMobject(color=parent_color, stroke_width=6)
+            line.set_points_smoothly(pts)
+            glow = line.copy().set_stroke(parent_color, width=22, opacity=0.12)
+            return VGroup(glow, line)
+
+        child_line = always_redraw(make_child_line)
+        parent_line = always_redraw(make_parent_line)
+        self.add(child_line, parent_line)
+
+        child_dot = Dot(color=child_color, radius=0.12)
+        parent_dot = Dot(color=parent_color, radius=0.12)
+        self.add(child_dot, parent_dot)
+
+        def update_dots(mob):
+            ct = t.get_value()
+            child_dot.move_to([ct, child_y(ct), 0])
+            parent_dot.move_to([ct, parent_y(ct), 0])
+
+        child_dot.add_updater(update_dots)
+        parent_dot.add_updater(update_dots)
+
+        def update_camera(mob):
+            ct = t.get_value()
+            cy = child_y(ct)
+            py = parent_y(ct)
+            y_center = (cy + py) / 2
+            frame_w = self.camera.frame_width
+            center_x = ct + frame_w/2 - 0.65 * frame_w
+            mob.move_to([center_x, y_center, 0])
+
+        self.camera.frame.add_updater(update_camera)
+
+        # Faza 1: lot przez przestrzeń (10s)
+        self.play(t.animate.set_value(10), run_time=10, rate_func=linear)
+
+        # Faza 2: rozdzielenie - Child w górę, Parent w dółłł (2s)
+        self.play(
+            child_dot.animate.move_to([t.get_value(), child_y(t.get_value()) + 6, 0]),
+            parent_dot.animate.move_to([t.get_value(), parent_y(t.get_value()) - 6, 0]),
+            run_time=2,
+            rate_func=smooth,
+        )
+
+        self.wait(1)
