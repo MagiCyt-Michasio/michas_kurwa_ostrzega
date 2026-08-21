@@ -14,7 +14,6 @@ class CameraGeometryTest(MovingCameraScene):
         parent_color = "#22D3EE"
         grid_color = "#111111"
 
-        # Duża przestrzeń
         plane = NumberPlane(
             x_range=[-100, 100, 1],
             y_range=[-100, 100, 1],
@@ -42,7 +41,6 @@ class CameraGeometryTest(MovingCameraScene):
         def parent_y(x):
             return -0.12 * x + 0.3 * np.sin(0.7 * x + 0.5)
 
-        # Dwie proste trajektorie (od t-5 do t)
         def make_child_line():
             xs = np.linspace(t.get_value() - 5, t.get_value(), 200)
             ys = child_y(xs)
@@ -63,4 +61,39 @@ class CameraGeometryTest(MovingCameraScene):
         parent_line = always_redraw(make_parent_line)
         self.add(child_line, parent_line)
 
-        # Dwie duże kropki na czo
+        child_dot = Dot(color=child_color, radius=0.2)
+        parent_dot = Dot(color=parent_color, radius=0.2)
+        self.add(child_dot, parent_dot)
+
+        def update_dots(mob):
+            ct = t.get_value()
+            child_dot.move_to([ct, child_y(ct), 0])
+            parent_dot.move_to([ct, parent_y(ct), 0])
+
+        child_dot.add_updater(update_dots)
+        parent_dot.add_updater(update_dots)
+
+        def update_camera(mob):
+            ct = t.get_value()
+            cy = child_y(ct)
+            py = parent_y(ct)
+            y_center = (cy + py) / 2
+            frame_w = self.camera.frame_width
+            # Kropki w 70% szerokości kadru od lewej
+            screen_frac = 0.70
+            cam_x = ct + frame_w/2 - screen_frac * frame_w
+            mob.move_to([cam_x, y_center, 0])
+
+        self.camera.frame.add_updater(update_camera)
+
+        # Faza TRAVEL: 10s
+        self.play(t.animate.set_value(10), run_time=10, rate_func=linear)
+
+        # Faza ZOOM OUT: 2s
+        self.play(
+            self.camera.frame.animate.set_width(25).set_height(40),
+            run_time=2,
+            rate_func=smooth,
+        )
+
+        self.wait(1)
