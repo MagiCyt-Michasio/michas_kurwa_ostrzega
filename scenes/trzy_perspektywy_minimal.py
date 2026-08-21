@@ -10,10 +10,10 @@ config.background_color = "#000000"
 
 class TrzyPerspektywyMinimal(MovingCameraScene):
     def construct(self):
-        grazynka_color = "#EB4BE1"
-        fred_color = "#28EBF5"
-        michas_color = "#78B4FF"
-        grid_color = "#121212"
+        g_col = "#EB4BE1"
+        f_col = "#28EBF5"
+        m_col = "#78B4FF"
+        grid_col = "#121212"
 
         plane = NumberPlane(
             x_range=[-100, 100, 1],
@@ -21,7 +21,7 @@ class TrzyPerspektywyMinimal(MovingCameraScene):
             x_length=80,
             y_length=80,
             background_line_style={
-                "stroke_color": grid_color,
+                "stroke_color": grid_col,
                 "stroke_width": 1,
                 "stroke_opacity": 0.5,
             },
@@ -84,14 +84,14 @@ class TrzyPerspektywyMinimal(MovingCameraScene):
             glow = line.copy().set_stroke(col, width=18, opacity=0.35)
             return VGroup(glow, line)
 
-        g_line = always_redraw(lambda: make_line(traj_g, grazynka_color))
-        f_line = always_redraw(lambda: make_line(traj_f, fred_color))
-        m_line = always_redraw(lambda: make_line(traj_m, michas_color))
+        g_line = always_redraw(lambda: make_line(traj_g, g_col))
+        f_line = always_redraw(lambda: make_line(traj_f, f_col))
+        m_line = always_redraw(lambda: make_line(traj_m, m_col))
         self.add(g_line, f_line, m_line)
 
-        g_dot = Dot(color=grazynka_color, radius=0.15)
-        f_dot = Dot(color=fred_color, radius=0.15)
-        m_dot = Dot(color=michas_color, radius=0.15)
+        g_dot = Dot(color=g_col, radius=0.15)
+        f_dot = Dot(color=f_col, radius=0.15)
+        m_dot = Dot(color=m_col, radius=0.15)
         self.add(g_dot, f_dot, m_dot)
 
         def update_dots(mob):
