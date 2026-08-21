@@ -112,7 +112,6 @@ class TrzyPerspektywy(MovingCameraScene):
 
         self.camera.frame.add_updater(update_camera)
 
-        # Etykiety
         g_label = Text("GRAŻYNKA", font_size=24, color=grazynka_color)
         f_label = Text("FRED", font_size=24, color=fred_color)
         m_label = Text("MICHAŚ", font_size=24, color=michas_color)
