@@ -1,0 +1,13 @@
+INSTRUKCJA SKLEJENIA PLIKOW NA DEBIANIE:
+
+1. Upewnij sie, ze jestes w katalogu repo:
+   cd /michas_kurwa_ostrzega
+
+2. Sklej trzy czesci w jeden plik:
+   cat scenes/trzy_perspektywy_part1.py scenes/trzy_perspektywy_part2.py scenes/trzy_perspektywy_part3.py > scenes/trzy_perspektywy_full.py
+
+3. Renderuj:
+   manim -pql scenes/trzy_perspektywy_full.py TrzyPerspektywy
+
+   lub w wyzszej jakosci:
+   manim -pqh scenes/trzy_perspektywy_full.py TrzyPerspektywy
