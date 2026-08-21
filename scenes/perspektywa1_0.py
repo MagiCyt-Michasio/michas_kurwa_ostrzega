@@ -8,7 +8,7 @@ config.frame_height = 16
 config.frame_rate = 60
 config.background_color = "#000000"
 
-class Perspektywa1_0(MovingCameraScene):
+class Perspektywa10(MovingCameraScene):
     def construct(self):
         child_color = "#D946EF"
         parent_color = "#22D3EE"
